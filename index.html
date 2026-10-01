@@ -3,30 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>दैनिक अपडेट - Daily Updates</title>
+    <title>आर्चो न्यूज़ - Archo News</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f4f4f9; color: #333; }
-        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.1); display: inline-block; max-width: 600px; }
-        h1 { color: #0066cc; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; }
+        header { background-color: #c0392b; color: white; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; }
+        .categories { display: flex; overflow-x: auto; background: #fff; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); white-space: nowrap; position: sticky; top: 0; z-index: 100; }
+        .cat-btn { background: none; border: none; padding: 8px 15px; margin: 0 5px; font-size: 16px; cursor: pointer; color: #555; font-weight: bold; border-radius: 20px; transition: 0.3s; }
+        .cat-btn.active, .cat-btn:hover { background-color: #c0392b; color: white; }
+        .container { max-width: 800px; margin: 15px auto; padding: 0 10px; }
+        .news-card { display: flex; background: white; margin-bottom: 12px; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; transition: 0.2s; }
+        .news-card:hover { transform: scale(1.01); }
+        .news-img { width: 120px; height: 100px; object-fit: cover; flex-shrink: 0; }
+        .news-info { padding: 10px; display: flex; flex-direction: column; justify-content: center; }
+        .news-title { font-size: 16px; font-weight: bold; margin: 0 0 5px 0; color: #222; }
+        .news-desc { font-size: 13px; color: #666; margin: 0; }
+        /* Detail View Modal */
+        #detail-view { display: none; background: white; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; overflow-y: auto; padding: 20px; box-sizing: border-box; }
+        .back-btn { background: #c0392b; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; margin-bottom: 15px; }
+        .detail-img { width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; }
+        .detail-title { font-size: 22px; font-weight: bold; margin-bottom: 10px; color: #111; }
+        .detail-text { font-size: 16px; line-height: 1.6; color: #444; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>आज का खास विचार / तथ्य</h1>
-<!-- AI यहाँ रोज नया कंटेंट लिखेगा -->
-<p id="content">लोड हो रहा है...</p>
+
+    <header>आर्चो न्यूज़ (Archo News)</header>
+
+    <!-- कैटेगरी बार -->
+    <div class="categories" id="category-bar">
+        <button class="cat-btn active" onclick="filterNews('all')">सभी</button>
+        <button class="cat-btn" onclick="filterNews('politics')">राजनीति</button>
+        <button class="cat-btn" onclick="filterNews('tech')">टेक</button>
+        <button class="cat-btn" onclick="filterNews('sports')">खेल</button>
+        <button class="cat-btn" onclick="filterNews('business')">व्यापार</button>
+        <button class="cat-btn" onclick="filterNews('entertainment')">मनोरंजन</button>
+    </div>
+
+    <!-- न्यूज़ लिस्ट -->
+    <div class="container" id="news-container">
+        <p style="text-align:center;">लोड हो रहा है...</p>
+    </div>
+
+    <!-- फुल न्यूज़ डिटेल व्यू पेज -->
+    <div id="detail-view">
+        <button class="back-btn" onclick="goBack()">← वापस जाएं</button>
+        <img id="d-img" class="detail-img" src="" alt="">
+        <h1 id="d-title" class="detail-title"></h1>
+        <p id="d-text" class="detail-text"></p>
     </div>
 
     <script>
-        // यहाँ एआई द्वारा अपडेट किया गया डेटा लोड होगा
-        fetch('content.json')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('content').innerText = data.text;
-            })
-            .catch(error => {
-                document.getElementById('content').innerText = "कल का नया अपडेट जल्द आएगा!";
+        let allNews = [];
+
+        async function loadNews() {
+            try {
+                let response = await fetch('content.json');
+                allNews = await response.json();
+                displayNews(allNews);
+            } catch (error) {
+                document.getElementById('news-container').innerHTML = "<p style='text-align:center;'>डेटा लोड करने में समस्या आ रही है।</p>";
+            }
+        }
+
+        function displayNews(newsArray) {
+            let container = document.getElementById('news-container');
+            container.innerHTML = "";
+            if(newsArray.length === 0) {
+                container.innerHTML = "<p style='text-align:center;'>इस कैटेगरी में कोई खबर नहीं है।</p>";
+                return;
+            }
+            newsArray.forEach(item => {
+                let card = document.createElement('div');
+                card.className = 'news-card';
+                card.onclick = () => showDetail(item);
+                card.innerHTML = `
+                    <img class="news-img" src="${item.image}" alt="News">
+                    <div class="news-info">
+                        <h3 class="news-title">${item.title}</h3>
+                        <p class="news-desc">${item.summary}</p>
+                    </div>
+                `;
+                container.appendChild(card);
             });
+        }
+
+        function filterNews(category) {
+            let buttons = document.querySelectorAll('.cat-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if(category === 'all') {
+                displayNews(allNews);
+            } else {
+                let filtered = allNews.filter(item => item.category === category);
+                displayNews(filtered);
+            }
+        }
+
+        function showDetail(item) {
+            document.getElementById('d-img').src = item.image;
+            document.getElementById('d-title').innerText = item.title;
+            document.getElementById('d-text').innerText = item.content;
+            document.getElementById('detail-view').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function goBack() {
+            document.getElementById('detail-view').style.display = 'none';
+        }
+
+        loadNews();
     </script>
 </body>
 </html>
