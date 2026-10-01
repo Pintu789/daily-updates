@@ -2,8 +2,8 @@ name: Daily AI Content Update
 
 on:
   schedule:
-    - cron: '0 0 * * *' # यह हर दिन रात को 12 बजे ऑटोमैटिक चलेगा
-  workflow_dispatch: # इससे आप कभी भी बटन दबाकर मैन्युअल रूप से भी चला सकते हैं
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   update-content:
@@ -20,7 +20,7 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install requests google-generativeai
 
       - name: Run AI Script
         env:
