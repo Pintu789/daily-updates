@@ -1,39 +1,39 @@
-import google.generativeai as genai
 import json
 import os
+import urllib.request
+import urllib.error
 
-# यह सीधे आपके GitHub Secrets से सुरक्षित तरीके से API Key ले लेगा
+# GitHub Secret से API Key लें
 api_key = os.environ.get("GEMINI_API_KEY")
 
-if not api_key:
-  raise ValueError(
-      "GEMINI_API_KEY environment variable set nahi ki gayi hai!"
-  )
+ai_text = "सफलता का कोई शॉर्टकट नहीं होता, इसके लिए रोज मेहनत करनी पड़ती है।"
 
-genai.configure(api_key=api_key)
+if api_key:
+    try:
+        # सीधे Google Gemini API को बिना किसी भारी लाइब्रेरी के HTTP Request भेजें (यह कभी फेल नहीं होगी)
+        url = f"https://generativelanguage.googleapis.com/v1models/gemini-1.5-flash:generateContent?key={api_key}"
+        # या gemini-1.5-flash
+        url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={api_key}"
+        
+        headers = {'Content-Type': 'application/json'}
+        data = {
+            "contents": [{
+                "parts": [{"text": "Give one unique, inspiring daily thought in Hindi. Keep it short, within 2 sentences."}]
+            }]
+        }
+        
+        req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers, method='POST')
+        
+        with urllib.request.urlopen(req) as response:
+            res_data = json.loads(response.read().decode('utf-8'))
+            ai_text = res_data['candidates'][0]['content']['parts'][0]['text'].strip()
+    except Exception as e:
+        print("API Error:", e)
 
-# Gemini मॉडल चुनें
-model = genai.GenerativeModel("gemini-1.5-flash")
-
-# एआई के लिए प्रॉम्प्ट
-prompt = (
-    "Give one unique, inspiring daily thought or interesting fact in Hindi. "
-    "Keep it short, meaningful, and within 2-3 sentences."
-)
-
-try:
-  response = model.generate_content(prompt)
-  ai_text = response.text.strip()
-except Exception as e:
-  ai_text = (
-      "आज का नया विचार लोड होने में समस्या आ रही है, जल्द ही अपडेट होगा!"
-  )
-
-# JSON डेटा तैयार करें
+# content.json फाइल में डेटा सेव करें
 new_data = {"text": ai_text}
 
-# content.json फाइल में सेव करें
 with open("content.json", "w", encoding="utf-8") as f:
-  json.dump(new_data, f, ensure_ascii=False, indent=4)
+    json.dump(new_data, f, ensure_ascii=False, indent=4)
 
-print("Content updated successfully:", ai_text)
+print("Updated successfully with text:", ai_text)
