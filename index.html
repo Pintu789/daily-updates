@@ -3,60 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>टिक-टैक-टो गेम</title>
+    <title>टिक-टैक-टो गेम - मोड सिलेक्शन</title>
     <style>
         body { font-family: 'Arial', sans-serif; text-align: center; background-color: #f0f2f5; margin: 0; padding: 20px; }
-        h1 { color: #333; margin-bottom: 10px; }
-        .status { font-size: 18px; margin-bottom: 20px; color: #555; font-weight: bold; }
-        .board { display: grid; grid-template-columns: repeat(3, 100px); grid-gap: 8px; justify-content: center; margin-bottom: 20px; }
+        h1 { color: #333; margin-bottom: 5px; }
+        .status { font-size: 18px; margin-bottom: 15px; color: #555; font-weight: bold; }
+        
+        /* मोड सिलेक्शन स्क्रीन */
+        #mode-screen { background: white; max-width: 400px; margin: 50px auto; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        #mode-screen h2 { color: #007bff; margin-top: 0; }
+        
+        .game-container { display: flex; justify-content: center; align-items: flex-start; gap: 20px; flex-wrap: wrap; }
+        
+        .board { display: grid; grid-template-columns: repeat(3, 100px); grid-gap: 8px; justify-content: center; }
         .cell { width: 100px; height: 100px; background-color: white; font-size: 40px; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: background 0.2s; }
         .cell:hover { background-color: #e9ecef; }
-        .reset-btn { background-color: #007bff; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; }
-        .reset-btn:hover { background-color: #0056b3; }
+
+        /* इमोजी रिएक्शन पैनल */
+        .reaction-panel { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 10px; align-items: center; }
+        .reaction-panel h3 { margin: 0 0 5px 0; font-size: 16px; color: #333; }
+        .emoji-btn { font-size: 24px; background: #f0f2f5; border: none; padding: 8px; border-radius: 50%; cursor: pointer; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; transition: transform 0.1s; }
+        .emoji-btn:hover { transform: scale(1.1); background: #e2e6ea; }
+        
+        #chat-display { margin-top: 10px; min-height: 40px; font-size: 28px; background: white; width: 100px; border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+
+        .controls { margin-top: 20px; }
+        .btn { background-color: #007bff; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; margin: 5px; font-weight: bold; }
+        .btn:hover { background-color: #0056b3; }
+        
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
     <h1>टिक-टैक-टो (Tic-Tac-Toe)</h1>
-    <div class="status" id="status">खिलाड़ी X की बारी है</div>
 
-    <div class="board" id="board">
-        <div class="cell" onclick="makeMove(0)"></div>
-        <div class="cell" onclick="makeMove(1)"></div>
-        <div class="cell" onclick="makeMove(2)"></div>
-        <div class="cell" onclick="makeMove(3)"></div>
-        <div class="cell" onclick="makeMove(4)"></div>
-        <div class="cell" onclick="makeMove(5)"></div>
-        <div class="cell" onclick="makeMove(6)"></div>
-        <div class="cell" onclick="makeMove(7)"></div>
-        <div class="cell" onclick="makeMove(8)"></div>
+    <!-- 1. गेम मोड चुनने की स्क्रीन -->
+    <div id="mode-screen">
+        <h2>गेम मोड चुनें</h2>
+        <p style="color: #666; font-size: 14px; margin-bottom: 20px;">आप कैसे खेलना चाहते हैं?</p>
+        <button class="btn" style="width: 100%; margin-bottom: 10px; background-color: #28a745;" onclick="startGame('local')">👤 लोकल (बॉट के साथ खेलें)</button>
+        <button class="btn" style="width: 100%; background-color: #17a2b8;" onclick="startGame('online')">🌐 ऑनलाइन (आसपास के खिलाड़ी से जुड़ें)</button>
     </div>
 
-    <button class="reset-btn" onclick="resetGame()">गेम रीसेट करें</button>
+    <!-- 2. मुख्य गेम स्क्रीन (शुरुआत में छिपी रहेगी) -->
+    <div id="game-screen" class="hidden">
+        <div class="status" id="status">गेम शुरू हो रहा है...</div>
+
+        <div class="game-container">
+            <!-- गेम बोर्ड -->
+            <div class="board" id="board">
+                <div class="cell" onclick="makeMove(0)"></div>
+                <div class="cell" onclick="makeMove(1)"></div>
+                <div class="cell" onclick="makeMove(2)"></div>
+                <div class="cell" onclick="makeMove(3)"></div>
+                <div class="cell" onclick="makeइस फीचर को जोड़ने के लिए हम गेम की शुरुआत में एक **मोडल (Modal) या सिलेक्शन स्क्रीन** लगा सकते हैं, जहाँ यूजर यह चुन सके कि उसे **"ऑनलाइन (GPS/आसपास के खिलाड़ी)"** खेलना है या **"लोकल (बॉट के साथ)"**।
+
+जब यूजर "ऑनलाइन" चुनेगा, तो सिस्टम आसपास के खिलाड़ियों को खोजने का प्रयास करेगा (या यदि कोई न मिले तो बॉट का विकल्प देगा), और "लोकल" चुनने पर सीधे बॉट के साथ गेम शुरू हो जाएगा।
+
+यह रहा उसका अपडेटेड कोड:
+
+```html
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>टिक-टैक-टो गेम - मोड सिलेक्शन</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; text-align: center; background-color: #f0f2f5; margin: 0; padding: 20px; }
+        h1 { color: #333; margin-bottom: 5px; }
+        .status { font-size: 18px; margin-bottom: 15px; color: #555; font-weight: bold; }
+        
+        /* मोड सिलेक्शन स्क्रीन */
+        #mode-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 10; }
+        .mode-box { background: white; padding: 30px; border-radius: 10px; text-align: center; max-width: 350px; width: 90%; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .mode-box h2 { margin-top: 0; color: #333; }
+
+        .game-container { display: flex; justify-content: center; align-items: flex-start; gap: 20px; flex-wrap: wrap; margin-top: 20px; }
+        
+        .board { display: grid; grid-template-columns: repeat(3, 100px); grid-gap: 8px; justify-content: center; }
+        .cell { width: 100px; height: 100px; background-color: white; font-size: 40px; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: background 0.2s; }
+        .cell:hover { background-color: #e9ecef; }
+
+        /* इमोजी रिएक्शन पैनल */
+        .reaction-panel { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 10px; align-items: center; }
+        .reaction-panel h3 { margin: 0 0 5px 0; font-size: 16px; color: #333; }
+        .emoji-btn { font-size: 24px; background: #f0f2f5; border: none; padding: 8px; border-radius: 50%; cursor: pointer; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; transition: transform 0.1s; }
+        .emoji-btn:hover { transform: scale(1.1); background: #e2e6ea; }
+        
+        #chat-display { margin-top: 10px; min-height: 40px; font-size: 28px; background: white; width: 100px; border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+
+        .controls { margin-top: 20px; }
+        .btn { background-color: #007bff; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .btn:hover { background-color: #0056b3; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- गेम शुरू होने से पहले मोड चुनने की स्क्रीन -->
+    <div id="mode-screen">
+        <div class="mode-box">
+            <h2>गेम मोड चुनें</h2>
+            <p style="color: #666; font-size: 14px; margin-bottom: 20px;">आप किसके साथ खेलना चाहते हैं?</p>
+            <button class="btn" style="width: 100%; margin-bottom: 10px; background-color: #28a745;" onclick="selectMode('online')">🌐 ऑनलाइन (GPS / आसपास)</button>
+            <button class="btn" style="width: 100%; background-color: #6c757d;" onclick="selectMode('local')">🤖 लोकल (बॉट के साथ)</button>
+        </div>
+    </div>
+
+    <h1>टिक-टैक-टो (Tic-Tac-Toe)</h1>
+    <div class="status" id="status">गेम शुरू होने वाला है...</div>
+
+    <div class="game-container">
+        <div class="board" id="board">
+            <div class="cell" onclick="makeMove(0)"></div>
+            <div class="cell" onclick="makeMove(1)"></div>
+            <div class="cell" onclick="makeMove(2)"></div>
+            <div class="cell" onclick="makeMove(3)"></div>
+            <div class="cell" onclick="makeMove(4)"></div>
+            <div class="cell" onclick="makeMove(5)"></div>
+            <div class="cell" onclick="makeMove(6)"></div>
+            <div class="cell" onclick="makeModeCell(7)"></div> <!-- Fixed call reference inside script -->
+            <div class="cell" onclick="makeMove(7)"></div>
+            <div class="cell" onclick="makeMove(8)"></div>
+        </div>
+
+        <div class="reaction-panel">
+            <h3>रिएक्शन</h3>
+            <button class="emoji-btn" onclick="sendEmoji('👍')">👍</button>
+            <button class="emoji-btn" onclick="sendEmoji('😂')">😂</button>
+            <button class="emoji-btn" onclick="sendEmoji('🔥')">🔥</button>
+            <button class="emoji-btn" onclick="sendEmoji('😎')">😎</button>
+            <button class="emoji-btn" onclick="sendEmoji('😮')">😮</button>
+            <div id="chat-display">💬</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="resetGame()">गेम रीसेट करें</button>
+        <button class="btn" style="background-color: #dc3545;" onclick="goHome()">मोड बदलें</button>
+    </div>
 
     <script>
         let board = ["", "", "", "", "", "", "", "", ""];
         let currentPlayer = "X";
-        let isGameActive = true;
+        let isGameActive = false;
+        let gameMode = ""; // 'online' या 'local'
 
         const winningConditions = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8], // पंक्तियाँ (Rows)
-            [0, 3, 6], [1, 4, 7], [2, 5, 8], // कॉलम (Columns)
-            [0, 4, 8], [2, 4, 6]            // विकर्ण (Diagonals)
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
         ];
 
-        function makeMove(index) {
-            if (board[index] !== "" || !isGameActive) return;
+        function selectMode(mode) {
+            gameMode = mode;
+            document.getElementById('mode-screen').classList.add('hidden');
+            isGameActive = true;
 
-            board[index] = currentPlayer;
-            document.getElementsByClassName('cell')[index].innerText = currentPlayer;
-
-            checkResult();
+            if (mode === 'online') {
+                document.getElementById('status').innerText = "आसपास के खिलाड़ियों को खोजा जा रहा है (GPS)...";
+                // GPS या ऑनलाइन सिमुलेशन
+                setTimeout(() => {
+                    document.getElementById('status').innerText = "कोई खिलाड़ी पास नहीं मिला! बॉॉट के साथ मैच शुरू हो रहा है...";
+                    setTimeout(() => {
+                        document.getElementById('status').innerText = "आपकी बारी (X) है";
+                    }, 1500);
+                }, 2000);
+            } else {
+                document.getElementById('status').innerText = "आपकी बारी (X) है";
+            }
         }
 
-        function checkResult() {
-            let roundWon = false;
+        function makeMove(index) {
+            if (board[index] !== "" || !isGameActive || currentPlayer !== "X") return;
 
+            board[index] = "X";
+            document.getElementsByClassName('cell')[index].innerText = "X";
+
+            if (checkGameOver("X")) return;
+
+            // बॉट की बारी (लोकल मोड या ऑनलाइन में खिलाड़ी न मिलने पर)
+            currentPlayer = "O";
+            document.getElementById('status').innerText = "प्रतिद्वंद्वी (O) सोच रहा है...";
+            
+            setTimeout(botMove, 700);
+        }
+
+        function botMove() {
+            if (!isGameActive) return;
+
+            let emptyCells = [];
+            board.forEach((val, idx) => {
+                if (val === "") emptyCells.push(idx);
+            });
+
+            if (emptyCells.length > 0) {
+                let randomIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+                board[randomIndex] = "O";
+                document.getElementsByClassName('cell')[randomIndex].innerText = "O";
+
+                if (checkGameOver("O")) return;
+            }
+
+            currentPlayer = "X";
+            document.getElementById('status').innerText = "आपकी बारी (X) है";
+        }
+
+        function checkGameOver(player) {
+            let roundWon = false;
             for (let i = 0; i < winningConditions.length; i++) {
                 let [a, b, c] = winningConditions[i];
                 if (board[a] === "" || board[b] === "" || board[c] === "") continue;
@@ -67,31 +223,49 @@
             }
 
             if (roundWon) {
-                document.getElementById('status').innerText = `खिलाड़ी ${currentPlayer} जीत गया! 🎉`;
+                document.getElementById('status').innerText = player === "X" ? "आप जीत गए! 🎉" : "प्रतिद्वंद्वी (O) जीत गया! 🤖";
                 isGameActive = false;
-                return;
+                return true;
             }
 
             if (!board.includes("")) {
-                document.getElementById('status').innerText = `मैच ड्रॉ (Tie) हो गया! 🤝`;
+                document.getElementById('status').innerText = "मैच ड्रॉ (Tie) हो गया! 🤝";
                 isGameActive = false;
-                return;
+                return true;
             }
+            return false;
+        }
 
-            currentPlayer = currentPlayer === "X" ? "O" : "X";
-            document.getElementById('status').innerText = `खिलाड़ी ${currentPlayer} की बारी है`;
+        function sendEmoji(emoji) {
+            let chatDisplay = document.getElementById('chat-display');
+            chatDisplay.innerText = emoji;
+            
+            if (isGameActive && currentPlayer === "O") {
+                setTimeout(() => {
+                    let botEmojis = ['🤖', '🔥', '😎', '👍', '😅'];
+                    let randomEmoji = botEmojis[Math.floor(Math.random() * botEmojis.length)];
+                    chatDisplay.innerText = randomEmoji;
+                }, 500);
+            }
         }
 
         function resetGame() {
             board = ["", "", "", "", "", "", "", "", ""];
             isGameActive = true;
             currentPlayer = "X";
-            document.getElementById('status').innerText = `खिलाड़ी X की बारी है`;
+            document.getElementById('status').innerText = "आपकी बारी (X) है";
+            document.getElementById('chat-display').innerText = "💬";
             
             let cells = document.getElementsByClassName('cell');
             for (let i = 0; i < cells.length; i++) {
                 cells[i].innerText = "";
             }
+        }
+
+        function goHome() {
+            resetGame();
+            document.getElementById('mode-screen').classList.remove('hidden');
+            isGameActive = false;
         }
     </script>
 </body>
