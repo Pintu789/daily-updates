@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>अल्ट्रा टिक-टैक-टो - हार्ड बॉट और एनिमेशन</title>
+    <title>अल्टीमेट टिक-टैक-टो - प्लेयर नाम</title>
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -17,53 +17,60 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: background 0.5s; 
         }
         
-        h1 { margin-bottom: 5px; font-size: 28px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        .status { font-size: 18px; margin-bottom: 20px; color: #f0f0f0; font-weight: bold; background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { margin-bottom: 5px; font-size: 26px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .status { font-size: 16px; margin-bottom: 15px; color: #f0f0f0; font-weight: bold; background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         
-        #mode-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 15, 25, 0.95); display: flex; justify-content: center; align-items: center; z-index: 10; }
-        .mode-box { background: #22223b; padding: 40px; border-radius: 15px; text-align: center; max-width: 380px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); }
-        .mode-box h2 { margin-top: 0; color: #f72585; font-size: 24px; }
-        .mode-box p { color: #b5179e; font-size: 14px; margin-bottom: 25px; }
+        /* स्क्रीन और मोडल स्टाइल */
+        .screen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 15, 25, 0.95); display: flex; justify-content: center; align-items: center; z-index: 10; }
+        .box { background: #22223b; padding: 30px; border-radius: 15px; text-align: center; max-width: 380px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); }
+        .box h2 { margin-top: 0; color: #f72585; font-size: 22px; }
+        .box p { color: #b5179e; font-size: 13px; margin-bottom: 20px; }
+        
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #4361ee; border-radius: 8px; background: #1e1e2f; color: #fff; font-size: 15px; box-sizing: border-box; }
+        input:focus { outline: none; border-color: #f72585; }
 
-        .game-container { display: flex; justify-content: center; align-items: center; gap: 25px; flex-wrap: wrap; margin-top: 10px; }
+        .game-container { display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: 10px; }
         
-        .board { display: grid; grid-template-columns: repeat(3, 100px); grid-gap: 10px; justify-content: center; background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
-        .cell { width: 100px; height: 100px; background-color: #3a0ca3; color: #fff; font-size: 45px; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.2s ease; }
-        .cell:hover { background-color: #4361ee; transform: translateY(-3px); }
+        .board { display: grid; grid-template-columns: repeat(3, 95px); grid-gap: 8px; justify-content: center; background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+        .cell { width: 95px; height: 95px; background-color: #3a0ca3; color: #fff; font-size: 40px; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.2s ease; }
+        .cell:hover { background-color: #4361ee; transform: translateY(-2px); }
+
+        /* प्लेयर कार्ड्स */
+        .player-info-card { background: #22223b; padding: 12px 18px; border-radius: 12px; font-size: 15px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px; width: 180px; text-align: center; }
+        .player-info-card span { color: #4cc9f0; font-weight: bold; display: block; font-size: 16px; margin-top: 3px; }
 
         .reaction-box {
             background: #22223b;
-            padding: 12px 18px;
+            padding: 10px 15px;
             border-radius: 30px;
             box-shadow: 0 6px 15px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             border: 1px solid rgba(255,255,255,0.1);
         }
 
         .emoji-btn {
-            font-size: 22px;
+            font-size: 20px;
             background: #3a0ca3;
             border: none;
             border-radius: 50%;
-            width: 42px;
-            height: 42px;
+            width: 38px;
+            height: 38px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s;
         }
-        .emoji-btn:hover { transform: scale(1.25); background: #4361ee; }
+        .emoji-btn:hover { transform: scale(1.2); background: #4361ee; }
 
         #chat-display {
-            width: 50px;
-            height: 50px;
-            font-size: 26px;
+            width: 45px;
+            height: 45px;
+            font-size: 24px;
             background: linear-gradient(135deg, #f72585 0%, #7209b7 100%);
             border-radius: 50%;
             display: flex;
@@ -79,40 +86,44 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* प्लेयर जीतने पर शानदार हरा एनीमेशन */
-        .winner-animation {
-            animation: winPulse 0.8s infinite alternate;
-        }
+        .winner-animation { animation: winPulse 0.8s infinite alternate; }
         @keyframes winPulse {
             0% { transform: scale(1); filter: drop-shadow(0 0 10px #4cc9f0); }
             100% { transform: scale(1.03); filter: drop-shadow(0 0 25px #4cc9f0); }
         }
 
-        /* बॉट जीतने / प्लेयर हारने पर लाल शेक एनीमेशन */
-        .loser-animation {
-            animation: loseShake 0.5s ease;
-        }
+        .loser-animation { animation: loseShake 0.5s ease; }
         @keyframes loseShake {
             0%, 100% { transform: translateX(0); }
             20%, 60% { transform: translateX(-8px); }
             40%, 80% { transform: translateX(8px); }
         }
 
-        .side-panel { display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        .controls { margin-top: 25px; display: flex; gap: 10px; justify-content: center; }
-        .btn { background-color: #4cc9f0; color: #1e1e2f; border: none; padding: 12px 24px; font-size: 16px; border-radius: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.2s; }
+        .side-panel { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .controls { margin-top: 20px; display: flex; gap: 10px; justify-content: center; }
+        .btn { background-color: #4cc9f0; color: #1e1e2f; border: none; padding: 10px 20px; font-size: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.2s; }
         .btn:hover { background-color: #3fe0ff; transform: translateY(-2px); }
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <!-- मोड चयन स्क्रीन -->
-    <div id="mode-screen">
-        <div class="mode-box">
+    <!-- 1. प्रोफाइल रजिस्ट्रेशन स्क्रीन (केवल प्लेयर का नाम) -->
+    <div id="profile-screen" class="screen-overlay">
+        <div class="box">
+            <h2>अपना नाम दर्ज करें</h2>
+            <p>गेम में पहचान के लिए अपना नाम लिखें</p>
+            <input type="text" id="user-name" placeholder="आपका नाम (जैसे: राहुल)">
+            <button class="btn" style="width: 100%; margin-top: 10px; background-color: #4cc9f0;" onclick="saveProfile()">आगे बढ़ें</button>
+        </div>
+    </div>
+
+    <!-- 2. गेम मोड चयन स्क्रीन -->
+    <div id="mode-screen" class="screen-overlay hidden">
+        <div class="box">
             <h2>गेम मोड चुनें</h2>
-            <p>चुनें कि आप किस चुनौती के साथ खेलना चाहते हैं</p>
-            <button class="btn" style="width: 100%; margin-bottom: 12px; background-color: #4cc9f0;" onclick="selectMode('online')">🌐 ऑनलाइन (500 किमी GPS / 1 मिनट)</button>
+            <p>चुनें कि आप किसके साथ मुकाबला करना चाहते हैं</p>
+            <button class="btn" style="width: 100%; margin-bottom: 12px; background-color: #4cc9f0;" onclick="selectMode('online')">🌐 ऑनलाइन (500 किमी नियरेस्ट प्लेयर)</button>
             <button class="btn" style="width: 100%; background-color: #f72585; color: white;" onclick="selectMode('local')">🤖 लोकल (असंभव हार्ड बॉट)</button>
         </div>
     </div>
@@ -121,6 +132,18 @@
     <div class="status" id="status">गेम शुरू होने वाला है...</div>
 
     <div class="game-container" id="main-container">
+        <!-- दोनों खिलाड़ियों का नाम दिखाने का पैनल -->
+        <div class="side-panel">
+            <div class="player-info-card">
+                <div>खिलाड़ी 1 (X)</div>
+                <span id="p1-display">---</span>
+            </div>
+            <div class="player-info-card">
+                <div>खिलाड़ी 2 (O)</div>
+                <span id="p2-display">---</span>
+            </div>
+        </div>
+
         <div class="board" id="board">
             <div class="cell" onclick="makeMove(0)"></div>
             <div class="cell" onclick="makeMove(1)"></div>
@@ -151,11 +174,15 @@
     </div>
 
     <script>
+        let myName = "";
+        let opponentName = "";
+
         let board = ["", "", "", "", "", "", "", "", ""];
         let currentPlayer = "X";
         let isGameActive = false;
         let searchTimerInterval;
         let holdTimer;
+        let gameMode = "";
 
         const winningConditions = [
             [0, 1, 2], [3, 4, 5], [6, 7, 8],
@@ -163,41 +190,56 @@
             [0, 4, 8], [2, 4, 6]
         ];
 
+        function saveProfile() {
+            let nameInput = document.getElementById('user-name').value.trim();
+
+            if (!nameInput) {
+                alert("कृपया अपना नाम दर्ज करें!");
+                return;
+            }
+
+            myName = nameInput;
+
+            document.getElementById('profile-screen').classList.add('hidden');
+            document.getElementById('mode-screen').classList.remove('hidden');
+            
+            document.getElementById('p1-display').innerText = myName;
+        }
+
         function selectMode(mode) {
+            gameMode = mode;
             document.getElementById('mode-screen').classList.add('hidden');
 
             if (mode === 'online') {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        (position) => { startPlayerSearch(); },
-                        (error) => { startPlayerSearch(); }
-                    );
-                } else {
-                    startPlayerSearch();
-                }
+                document.getElementById('status').innerText = "500 किमी के दायरे में नियरेस्ट प्लेयर खोजा जा रहा है...";
+                
+                let timer = 5;
+                searchTimerInterval = setInterval(() => {
+                    timer--;
+                    if (timer > 0) {
+                        document.getElementById('status').innerText = `नियरेस्ट प्लेयर तलाश रहे हैं... (${timer}s)`;
+                    } else {
+                        clearInterval(searchTimerInterval);
+                        opponentName = "विक्रम (Online)";
+                        
+                        document.getElementById('p2-display').innerText = opponentName;
+                        
+                        document.getElementById('status').innerText = `${opponentName} मिल गया! मैच शुरू...`;
+                        setTimeout(() => {
+                            isGameActive = true;
+                            document.getElementById('status').innerText = `${myName} की बारी (X) है`;
+                        }, 1200);
+                    }
+                }, 1000);
+
             } else {
+                opponentName = "असंभव बॉट";
+                
+                document.getElementById('p2-display').innerText = opponentName;
+
                 isGameActive = true;
-                document.getElementById('status').innerText = "आपकी बारी (X) है";
+                document.getElementById('status').innerText = `${myName} की बारी (X) है`;
             }
-        }
-
-        function startPlayerSearch() {
-            let timeLeft = 60;
-            document.getElementById('status').innerText = `500 किमी रेंज में खिलाड़ी खोजे जा रहे हैं... (${timeLeft}s)`;
-
-            searchTimerInterval = setInterval(() => {
-                timeLeft--;
-                if (timeLeft > 0) {
-                    document.getElementById('status').innerText = `500 किमी रेंज में खिलाड़ी खोजे जा रहे हैं... (${timeLeft}s)`;
-                } else {
-                    clearInterval(searchTimerInterval);
-                    document.getElementById('status').innerText = "कोई खिलाड़ी नहीं मिला! अति कठिन बॉट से मुकाबला शुरू...";
-                    setTimeout(() => {
-                        isGameActive = true;
-                        document.getElementById('status').innerText = "आपकी बारी (X) है";
-                    }, 1500);
-                }
-            }, 1000);
         }
 
         function makeMove(index) {
@@ -209,12 +251,11 @@
             if (checkGameOver()) return;
 
             currentPlayer = "O";
-            document.getElementById('status').innerText = "अति बुद्धिमान बॉट (O) चाल चल रहा है...";
+            document.getElementById('status').innerText = `${opponentName} चाल चल रहा है...`;
             
-            setTimeout(botMove, 600);
+            setTimeout(botMove, 700);
         }
 
-        // अति कठिन बॉट के लिए मिनिमैक्स (Minimax) एल्गोरिथ्म लॉजिक
         function botMove() {
             if (!isGameActive) return;
 
@@ -240,7 +281,7 @@
             if (checkGameOver()) return;
 
             currentPlayer = "X";
-            document.getElementById('status').innerText = "आपकी बारी (X) है";
+            document.getElementById('status').innerText = `${myName} की बारी (X) है`;
         }
 
         function minimax(newBoard, depth, isMaximizing) {
@@ -291,12 +332,13 @@
             let res = evaluateBoard(board);
             if (res !== null) {
                 isGameActive = false;
+                let container = document.getElementById('main-container');
                 if (res === "X") {
-                    document.getElementById('status').innerText = "🥳 अद्भुत! आपने असंभव बॉट को हरा दिया! 🎉";
-                    document.getElementById('main-container').classList.add('winner-animation');
+                    document.getElementById('status').innerText = `🥳 अद्भुत! ${myName} जीत गए! 🎉`;
+                    container.classList.add('winner-animation');
                 } else if (res === "O") {
-                    document.getElementById('status').innerText = "🤖 बॉट जीत गया! यह मुकाबला बेहद कठिन था। 💀";
-                    document.getElementById('main-container').classList.add('loser-animation');
+                    document.getElementById('status').innerText = `🤖 ${opponentName} जीत गया!`;
+                    container.classList.add('loser-animation');
                 } else {
                     document.getElementById('status').innerText = "🤝 मुकाबला बराबरी (Draw) पर छूटा!";
                 }
@@ -337,7 +379,7 @@
             board = ["", "", "", "", "", "", "", "", ""];
             isGameActive = true;
             currentPlayer = "X";
-            document.getElementById('status').innerText = "आपकी बारी (X) है";
+            document.getElementById('status').innerText = `${myName} की बारी (X) है`;
             document.getElementById('chat-display').innerText = "💬";
             
             let container = document.getElementById('main-container');
@@ -353,7 +395,7 @@
         function goHome() {
             clearInterval(searchTimerInterval);
             resetGame();
-            document.getElementById('mode-screen').classList.remove('hidden');
+            document.getElementById('profile-screen').classList.remove('hidden');
             isGameActive = false;
         }
     </script>
