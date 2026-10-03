@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>अल्टीमेट टिक-टैक-टो - रियल ऑनलाइन मल्टीप्लेयर</title>
+    <title> -- -  </title>
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -51,30 +51,30 @@
 <body>
     <div id="profile-screen" class="screen-overlay">
         <div class="box">
-            <h2>अपना नाम दर्ज करें</h2>
-            <p>ऑनलाइन खेलने के लिए अपनी पहचान दें</p>
-            <input type="text" id="user-name" placeholder="आपका नाम (जैसे: राहुल)" autocomplete="off">
-            <button class="btn" style="width: 100%; margin-top: 10px; background-color: #4cc9f0;" onclick="saveProfile()">आगे बढ़ें</button>
+            <h2>   </h2>
+            <p>      </p>
+            <input type="text" id="user-name" placeholder="  (: )" autocomplete="off">
+            <button class="btn" style="width: 100%; margin-top: 10px; background-color: #4cc9f0;" onclick="saveProfile()"> </button>
         </div>
     </div>
     <div id="mode-screen" class="screen-overlay hidden">
         <div class="box">
-            <h2>गेम मोड चुनें</h2>
-            <p>असली खिलाड़ियों के साथ ऑनलाइन मुकाबला करें</p>
-            <button class="btn" style="width: 100%; margin-bottom: 12px; background-color: #4cc9f0;" onclick="selectMode('online')">🌐 असली ऑनलाइन प्लेयर खोजें (1 मिनट)</button>
-            <button class="btn" style="width: 100%; background-color: #f72585; color: white;" onclick="selectMode('local')">🤖 लोकल (असंभव हार्ड बॉट)</button>
+            <h2>  </h2>
+            <p>      </p>
+            <button class="btn" style="width: 100%; margin-bottom: 12px; background-color: #4cc9f0;" onclick="selectMode('online')">     (1 )</button>
+            <button class="btn" style="width: 100%; background-color: #f72585; color: white;" onclick="selectMode('local')">  (  )</button>
         </div>
     </div>
-    <h1>टिक-टैक-टो अल्टीमेट</h1>
-    <div class="status" id="status">गेम शुरू होने वाला है...</div>
+    <h1>-- </h1>
+    <div class="status" id="status">    ...</div>
     <div class="game-container" id="main-container">
         <div class="side-panel">
             <div class="player-info-card">
-                <div>खिलाड़ी 1 (X)</div>
+                <div> 1 (X)</div>
                 <span id="p1-display">---</span>
             </div>
             <div class="player-info-card">
-                <div>खिलाड़ी 2 (O)</div>
+                <div> 2 (O)</div>
                 <span id="p2-display">---</span>
             </div>
         </div>
@@ -91,22 +91,22 @@
         </div>
         <div class="side-panel">
             <div class="reaction-box">
-                <button class="emoji-btn" onclick="sendEmoji('👍')" onmousedown="startHold('👍')" ontouchstart="startHold('👍')">👍</button>
-                <button class="emoji-btn" onclick="sendEmoji('😂')">😂</button>
-                <button class="emoji-btn" onclick="sendEmoji('🔥')">🔥</button>
-                <button class="emoji-btn" onclick="sendEmoji('😎')">😎</button>
-                <button class="emoji-btn" onclick="sendEmoji('😮')">😮</button>
-                <div id="chat-display">💬</div>
+                <button class="emoji-btn" onclick="sendEmoji('')" onmousedown="startHold('')" ontouchstart="startHold('')"></button>
+                <button class="emoji-btn" onclick="sendEmoji('')"></button>
+                <button class="emoji-btn" onclick="sendEmoji('')"></button>
+                <button class="emoji-btn" onclick="sendEmoji('')"></button>
+                <button class="emoji-btn" onclick="sendEmoji('')"></button>
+                <div id="chat-display"></div>
             </div>
         </div>
     </div>
     <div class="controls">
-        <button class="btn" onclick="resetGame()">गेम रीसेट करें</button>
-        <button class="btn" style="background-color: #f72585; color: white;" onclick="goHome()">मोड बदलें</button>
+        <button class="btn" onclick="resetGame()">  </button>
+        <button class="btn" style="background-color: #f72585; color: white;" onclick="goHome()"> </button>
     </div>
         <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-        import { getDatabase, ref, set, get, update, onValue, remove, child } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+        import { getDatabase, ref, set, get, update, onValue, remove } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD3HUZgZ1G2hN4BXnIbRV8eD0nPlWUaByM",
@@ -142,7 +142,7 @@
         window.saveProfile = function() {
             let nameInput = document.getElementById('user-name').value.trim();
             if (!nameInput) {
-                alert("कृपया अपना नाम दर्ज करें!");
+                alert("    !");
                 return;
             }
             myName = nameInput;
@@ -157,87 +157,95 @@
             if (mode === 'online') {
                 findOrCreateRoom();
             } else {
-                opponentName = "असंभव बॉट";
+                opponentName = " ";
                 document.getElementById('p2-display').innerText = opponentName;
                 myRole = "X";
                 isGameActive = true;
-                document.getElementById('status').innerText = `${myName} की बारी (X) है`;
+                document.getElementById('status').innerText = `${myName}   (X) `;
             }
         }
 
         function findOrCreateRoom() {
             let timeLeft = 60; 
-            document.getElementById('status').innerText = `रियल ऑनलाइन प्लेयर खोजे जा रहे हैं... (${timeLeft}s)`;
-            const waitingRef = ref(db, 'matchmaking/waitingRoom');
-            get(waitingRef).then((snapshot) => {
+            document.getElementById('status').innerText = `      ... (${timeLeft}s)`;
+
+            const waitingRoomRef = ref(db, 'matchmaking/waiting');
+            
+            get(waitingRoomRef).then((snapshot) => {
                 if (snapshot.exists()) {
+                    //        ,      
                     let roomData = snapshot.val();
                     currentRoomId = roomData.roomId;
                     opponentName = roomData.player1Name;
                     myRole = "O";
+
                     update(ref(db, `rooms/${currentRoomId}`), {
                         player2Name: myName,
                         status: 'playing'
                     }).then(() => {
-                        remove(waitingRef);
+                        remove(waitingRoomRef); //          
                         startGameOnline();
                     });
                 } else {
+                    //    ,          
                     currentRoomId = 'room_' + Date.now();
-                    const roomRef = ref(db, `rooms/${currentRoomId}`);
-                    set(roomRef, {
+                    
+                    set(ref(db, `rooms/${currentRoomId}`), {
                         roomId: currentRoomId,
                         player1Name: myName,
                         player2Name: "",
-                        status: 'waiting',
                         board: ["","","","","","","","",""],
                         turn: "X",
                         winner: null
                     }).then(() => {
-                        set(waitingRef, {
+                        set(waitingRoomRef, {
                             roomId: currentRoomId,
                             player1Name: myName
                         });
+
                         searchInterval = setInterval(() => {
                             timeLeft--;
                             if (timeLeft > 0) {
-                                document.getElementById('status').innerText = `रियल ऑनलाइन प्लेयर खोजे जा रहे हैं... (${timeLeft}s)`;
-                                get(child(ref(db), `rooms/${currentRoomId}/player2Name`)).then((snap) => {
+                                document.getElementById('status').innerText = `      ... (${timeLeft}s)`;
+                                
+                                //            
+                                get(ref(db, `rooms/${currentRoomId}/player2Name`)).then((snap) => {
                                     if(snap.exists() && snap.val() !== "") {
                                         clearInterval(searchInterval);
                                         myRole = "X";
                                         opponentName = snap.val();
-                                        remove(waitingRef);
                                         startGameOnline();
                                     }
                                 });
                             } else {
+                                // 1        
                                 clearInterval(searchInterval);
-                                remove(waitingRef);
+                                remove(waitingRoomRef);
                                 remove(ref(db, `rooms/${currentRoomId}`));
-                                document.getElementById('status').innerText = "1 मिनट में कोई असली खिलाड़ी नहीं मिला! बॉट से मुकाबला शुरू...";
+                                
+                                document.getElementById('status').innerText = "   !    ...";
                                 setTimeout(() => {
                                     gameMode = 'local';
-                                    opponentName = "असंभव बॉट";
+                                    opponentName = " ";
                                     document.getElementById('p2-display').innerText = opponentName;
                                     myRole = "X";
                                     isGameActive = true;
-                                    document.getElementById('status').innerText = `${myName} की बारी (X) है`;
+                                    document.getElementById('status').innerText = `${myName}   (X) `;
                                 }, 1500);
                             }
                         }, 1000);
                     });
                 }
             }).catch((error) => {
-                console.error("Firebase Error: ", error);
-                document.getElementById('status').innerText = "डेटाबेस कनेक्शन त्रुटि! लोकल बॉट मोड शुरू किया जा रहा है...";
+                console.error(error);
+                document.getElementById('status').innerText = " !   ...";
                 setTimeout(() => {
                     gameMode = 'local';
-                    opponentName = "असंभव बॉट";
+                    opponentName = " ";
                     document.getElementById('p2-display').innerText = opponentName;
                     myRole = "X";
                     isGameActive = true;
-                    document.getElementById('status').innerText = `${myName} की बारी (X) है`;
+                    document.getElementById('status').innerText = `${myName}   (X) `;
                 }, 1500);
             });
         }
@@ -245,51 +253,59 @@
         function startGameOnline() {
             document.getElementById('p2-display').innerText = opponentName;
             isGameActive = true;
-            document.getElementById('status').innerText = `मैच शुरू! खिलाड़ी ${myRole === 'X' ? myName : opponentName} की बारी है।`;
+            document.getElementById('status').innerText = ` ! ${myRole === 'X' ? myName : opponentName}   `;
+
             const roomRef = ref(db, `rooms/${currentRoomId}`);
             roomListener = onValue(roomRef, (snapshot) => {
                 const data = snapshot.val();
                 if (!data) return;
+
                 board = data.board;
                 updateBoardUI();
+
                 if (data.winner) {
                     isGameActive = false;
                     let container = document.getElementById('main-container');
                     if (data.winner === myRole) {
-                        document.getElementById('status').innerText = `🥳 अद्भुत! ${myName} जीत गए! 🎉`;
+                        document.getElementById('status').innerText = ` ! ${myName}  ! `;
                         container.classList.add('winner-animation');
                     } else if (data.winner === 'draw') {
-                        document.getElementById('status').innerText = "🤝 मुकाबला बराबरी (Draw) पर छूटा!";
+                        document.getElementById('status').innerText = "   (Draw)  !";
                     } else {
-                        document.getElementById('status').innerText = `🤖 ${opponentName} जीत गया!`;
+                        document.getElementById('status').innerText = ` ${opponentName}  !`;
                         container.classList.add('loser-animation');
                     }
                     return;
                 }
+
                 currentPlayer = data.turn;
                 if (currentPlayer === myRole) {
-                    document.getElementById('status').innerText = `आपकी बारी (${myRole}) है`;
+                    document.getElementById('status').innerText = `  (${myRole}) `;
                 } else {
-                    document.getElementById('status').innerText = `${opponentName} (${currentPlayer}) की बारी है...`;
+                    document.getElementById('status').innerText = `${opponentName} (${currentPlayer})   ...`;
                 }
             });
         }
 
         window.makeMove = function(index) {
             if (board[index] !== "" || !isGameActive) return;
+
             if (gameMode === 'local') {
                 if (currentPlayer !== "X") return;
                 board[index] = "X";
                 updateBoardUI();
                 if (checkGameOverLocal()) return;
+
                 currentPlayer = "O";
-                document.getElementById('status').innerText = `${opponentName} चाल चल रहा है...`;
+                document.getElementById('status').innerText = `${opponentName}    ...`;
                 setTimeout(botMoveLocal, 600);
             } else {
                 if (currentPlayer !== myRole) return;
+
                 board[index] = myRole;
                 let nextTurn = myRole === "X" ? "O" : "X";
                 let winRes = checkWinnerCondition(board);
+
                 update(ref(db, `rooms/${currentRoomId}`), {
                     board: board,
                     turn: nextTurn,
@@ -319,7 +335,7 @@
             }
             if (checkGameOverLocal()) return;
             currentPlayer = "X";
-            document.getElementById('status').innerText = `${myName} की बारी (X) है`;
+            document.getElementById('status').innerText = `${myName}   (X) `;
         }
 
         function checkWinnerCondition(b) {
@@ -339,13 +355,13 @@
                 isGameActive = false;
                 let container = document.getElementById('main-container');
                 if (res === "X") {
-                    document.getElementById('status').innerText = `🥳 अद्भुत! ${myName} जीत गए! 🎉`;
+                    document.getElementById('status').innerText = ` ! ${myName}  ! `;
                     container.classList.add('winner-animation');
                 } else if (res === "O") {
-                    document.getElementById('status').innerText = `🤖 ${opponentName} जीत गया!`;
+                    document.getElementById('status').innerText = ` ${opponentName}  !`;
                     container.classList.add('loser-animation');
                 } else {
-                    document.getElementById('status').innerText = "🤝 मुकाबला बराबरी (Draw) पर छूटा!";
+                    document.getElementById('status').innerText = "   (Draw)  !";
                 }
                 return true;
             }
@@ -393,7 +409,7 @@
 
         window.startHold = function(emoji) {
             holdTimer = setTimeout(() => {
-                sendEmoji(emoji + "✨");
+                sendEmoji(emoji + "");
             }, 600);
         }
 
@@ -417,9 +433,9 @@
                 isGameActive = true;
                 currentPlayer = "X";
                 updateBoardUI();
-                document.getElementById('status').innerText = `${myName} की बारी (X) है`;
+                document.getElementById('status').innerText = `${myName}   (X) `;
             }
-            document.getElementById('chat-display').innerText = "💬";
+            document.getElementById('chat-display').innerText = "";
             let container = document.getElementById('main-container');
             container.classList.remove('winner-animation');
             container.classList.remove('loser-animation');
