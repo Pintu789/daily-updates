@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>अल्टीमेट टिक-टैक-टो - रियल ऑनलाइन मैचमेकिंग</title>
+    <title>अल्टीमेट टिक-टैक-टो - फिक्सड नाम स्क्रीन</title>
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -194,7 +194,7 @@
         let currentPlayer = "X";
         let isGameActive = false;
         let gameMode = "";
-        let myRole = ""; // 'X' या 'O'
+        let myRole = ""; 
         let currentRoomId = null;
         let searchInterval = null;
         let roomListener = null;
@@ -212,8 +212,11 @@
                 return;
             }
             myName = nameInput;
-            document.getElementById('profile-screen').classList.add('hidden');
+            
+            // स्क्रीन बदलने का फिक्स कोड
+            document.getElementById('profile-screen').style.display = 'none';
             document.getElementById('mode-screen').classList.remove('hidden');
+            
             document.getElementById('p1-display').innerText = myName;
         }
 
@@ -232,31 +235,27 @@
             }
         }
 
-        // असली ऑनलाइन मैचमेकिंग (Firebase के ज़रिए)
         function findOrCreateRoom() {
-            let timeLeft = 60; // 1 मिनट (60 सेकंड) का असली टाइमर
+            let timeLeft = 60; 
             document.getElementById('status').innerText = `रियल ऑनलाइन प्लेयर खोजे जा रहे हैं... (${timeLeft}s)`;
 
             const waitingRef = ref(db, 'matchmaking/waitingRoom');
             
             get(waitingRef).then((snapshot) => {
                 if (snapshot.exists()) {
-                    // अगर कोई दूसरा खिलाड़ी पहले से वेटिंग में है, तो उसके रूम से जुड़ जाओ
                     let roomData = snapshot.val();
                     currentRoomId = roomData.roomId;
                     opponentName = roomData.player1Name;
                     myRole = "O";
 
-                    // रूम को अपडेट करो कि दूसरा खिलाड़ी आ गया है
                     update(ref(db, `rooms/${currentRoomId}`), {
                         player2Name: myName,
                         status: 'playing'
                     }).then(() => {
-                        remove(waitingRef); // वेटिंग रूम खाली करो
+                        remove(waitingRef);
                         startGameOnline();
                     });
                 } else {
-                    // अगर कोई नहीं है, तो नया रूम बनाओ और वेटिंग में बैठो
                     currentRoomId = 'room_' + Date.now();
                     const roomRef = ref(db, `rooms/${currentRoomId}`);
                     
@@ -274,13 +273,11 @@
                             player1Name: myName
                         });
 
-                        // 1 मिनट का टाइमर चलाएं
                         searchInterval = setInterval(() => {
                             timeLeft--;
                             if (timeLeft > 0) {
                                 document.getElementById('status').innerText = `रियल ऑनलाइन प्लेयर खोजे जा रहे हैं... (${timeLeft}s)`;
                                 
-                                // चेक करो कि क्या किसी ने रूम ज्वाइन कर लिया है
                                 get(child(ref(db), `rooms/${currentRoomId}/player2Name`)).then((snap) => {
                                     if(snap.exists() && snap.val() !== "") {
                                         clearInterval(searchInterval);
@@ -291,7 +288,6 @@
                                     }
                                 });
                             } else {
-                                // 1 मिनट पूरा होने पर कोई नहीं मिला -> बॉट से कनेक्ट करो
                                 clearInterval(searchInterval);
                                 remove(waitingRef);
                                 remove(ref(db, `rooms/${currentRoomId}`));
@@ -317,7 +313,6 @@
             isGameActive = true;
             document.getElementById('status').innerText = `मैच शुरू! खिलाड़ी ${myRole === 'X' ? myName : opponentName} की बारी है।`;
 
-            // डेटाबेस पर बोर्ड और गेम की स्थिति को सुनना (Realtime Sync)
             const roomRef = ref(db, `rooms/${currentRoomId}`);
             roomListener = onValue(roomRef, (snapshot) => {
                 const data = snapshot.val();
@@ -363,7 +358,6 @@
                 document.getElementById('status').innerText = `${opponentName} चाल चल रहा है...`;
                 setTimeout(botMoveLocal, 600);
             } else {
-                // ऑनलाइन मोड में चाल Firebase पर भेजना
                 if (currentPlayer !== myRole) return;
 
                 board[index] = myRole;
@@ -406,7 +400,7 @@
             for (let i = 0; i < winningConditions.length; i++) {
                 let [a, c, d] = winningConditions[i];
                 if (b[a] !== "" && b[a] === b[c] && b[c] === b[d]) {
-                    return b[a]; // 'X' या 'O'
+                    return b[a]; 
                 }
             }
             if (!b.includes("")) return "draw";
@@ -438,4 +432,20 @@
                 if (result === "O") return 10 - depth;
                 if (result === "X") return depth - 10;
                 return 0;
-         
+            }
+            if (isMaximizing) {
+                let maxScore = -Infinity;
+                for (let i = 0; i < 9; i++) {
+                    if (newBoard[i] === "") {
+                        newBoard[i] = "O";
+                        let score = minimax(newBoard, depth + 1, false);
+                        newBoard[i] = "";
+                        maxScore = Math.max(score, maxScore);
+                    }
+                }
+                return maxScore;
+            } else {
+                let minScore = Infinity;
+                for (let i = 0; i < 9; i++) {
+                    if (newBoard[i] === "") {
+                        newBoard[i] 
